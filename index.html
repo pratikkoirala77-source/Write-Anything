@@ -1,46 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Quotes & Blogs</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 700px;
-      margin: auto;
-      padding: 20px;
-      background: #f5f5f5;
-      line-height: 1.6;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .post {
-      background: white;
-      padding: 20px;
-      margin: 15px 0;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .post h2 {
-      margin-top: 0;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quotes & Blogs</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:700px;margin:auto;padding:20px;background:#f5f5f5;line-height:1.6}
+h1{text-align:center;margin-bottom:30px}
+.post{background:white;padding:20px;margin:15px 0;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
+.post h2{margin-top:0}
+#admin{display:none;margin-top:30px;border:1px solid #ccc;padding:15px;border-radius:10px;background:#eee}
+input,textarea{width:100%;margin:8px 0;padding:10px;border-radius:6px;border:1px solid #aaa}
+button{padding:10px 15px;border:none;border-radius:6px;background:#2563eb;color:white;cursor:pointer}
+</style>
 </head>
 <body>
-  <h1>Welcome to My Quotes & Blogs</h1>
+<h1>Quotes & Blogs</h1>
 
-  <div class="post">
-    <h2>✨ First Quote</h2>
-    <p>"This is my very first post!"</p>
-  </div>
+<div id="posts"></div>
 
-  <div class="post">
-    <h2>📝 First Blog</h2>
-    <p>Today I started my journey of sharing thoughts and quotes with the world through my own webpage. Excited for what comes next!</p>
-  </div>
+<div id="admin">
+  <h2>Admin Panel</h2>
+  <input type="text" id="title" placeholder="Title">
+  <textarea id="content" rows="4" placeholder="Quote or Blog"></textarea>
+  <button onclick="addPost()">Add Post</button>
+</div>
 
+<script>
+// Simple password-protected admin panel
+let adminPassword = prompt("Enter admin password to edit (leave blank to skip):");
+if(adminPassword==="1234"){document.getElementById("admin").style.display="block";}
+
+// Load posts from localStorage
+let posts = JSON.parse(localStorage.getItem("myPosts")||"[]");
+function renderPosts(){
+  let container=document.getElementById("posts");
+  container.innerHTML="";
+  posts.forEach(p=>{
+    let div=document.createElement("div");
+    div.className="post";
+    div.innerHTML=`<h2>${p.title}</h2><p>${p.content}</p>`;
+    container.appendChild(div);
+  });
+}
+renderPosts();
+
+// Add new post
+function addPost(){
+  let t=document.getElementById("title").value.trim();
+  let c=document.getElementById("content").value.trim();
+  if(!t||!c){alert("Both fields are required!");return;}
+  posts.unshift({title:t,content:c});
+  localStorage.setItem("myPosts",JSON.stringify(posts));
+  document.getElementById("title").value="";
+  document.getElementById("content").value="";
+  renderPosts();
+  alert("Post added!");
+}
+</script>
 </body>
 </html>
